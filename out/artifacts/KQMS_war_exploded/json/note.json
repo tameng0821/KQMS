@@ -1,0 +1,9 @@
+{
+	"total":100,
+	"rows":[
+			{"noteId":"1","fillInTime":"2005-02-05 12:25:32","employeeName":"杨玉环1","cardNumber":"A001001","typeName":"事假1","startDate":"2015-03-01","startTime":"上午","endDate":"2015-05-06","endTime":"下午","operatorName":"张三丰1"},
+			{"noteId":"2","fillInTime":"2005-02-05 12:25:32","employeeName":"杨玉环2","cardNumber":"A001002","typeName":"事假2","startDate":"2015-03-01","startTime":"上午","endDate":"2015-05-06","endTime":"下午","operatorName":"张三丰2"},
+			{"noteId":"3","fillInTime":"2005-02-05 12:25:32","employeeName":"杨玉环3","cardNumber":"A001003","typeName":"事假3","startDate":"2015-03-01","startTime":"上午","endDate":"2015-05-06","endTime":"下午","operatorName":"张三丰3"},
+			{"noteId":"4","fillInTime":"2005-02-05 12:25:32","employeeName":"杨玉环4","cardNumber":"A001004","typeName":"事假4","startDate":"2015-03-01","startTime":"上午","endDate":"2015-05-06","endTime":"下午","operatorName":"张三丰4"}
+		]
+}

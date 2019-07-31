@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css"/>
+    <link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="css/main.css">
+
+    <script src="js/jquery-easyui/jquery.min.js"></script>
+    <script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+    <script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            initDepartmentList();
+            initDialog();
+
+            $("#btnAdd").click(
+                openAddBox
+            );
+            $("#submitButton").click(
+                add
+            );
+            $("#editButton").click(
+                edit
+            );
+        });
+        function initDialog()
+        {
+            $('#addBox').dialog({
+                title: '新增部门',
+                width: 400,
+                height: 200,
+                closed: true,
+                modal: true
+            });
+
+            $('#modBox').dialog({
+                title: '编辑部门',
+                width: 400,
+                height: 200,
+                closed: true,
+                modal: true
+            });
+        }
+        //打开新增窗口
+        function openAddBox() {
+            $('#addBox').dialog({
+                closed: false
+            });
+        }
+        //初始化部门列表
+        function initDepartmentList() {
+            $("#tblDepartment").datagrid({
+                url:'/DepartmentController/query',
+                method:'post',
+                toolbar:'#barDepartment',
+                columns:[[
+                    {field:'departmentId',title:'部门编号',width:'33%',align:'center'},
+                    {field:'departmentName',title:'部门名称',width:'33%',align:'center'},
+                    {field:'option',title:'操作',width:'33%',align:'center',formatter:function (value,row,index) {
+                            var editerstr='<a href="#" class="easyui-linkbutton" data-options=' +
+                                '"iconCls:\'icon-edit\',plain:true" onclick="openEdit('+row.departmentId+','+'\''+row.departmentName +'\')">编辑</a>&nbsp&nbsp&nbsp';
+                            var deletestr = '<a href="#" class="easyui-linkbutton" data-options=' +
+                                '"iconCls:\'icon-edit\',plain:true" onclick="del(' + row.departmentId + ')">删除</a>';
+                            return editerstr+deletestr;
+                        }}
+                ]]
+            });
+        }
+        //打开编辑窗口并显示数据
+        function openEdit(departmentId,departmentName){
+            //调用函数的时候直接将值传过来
+            $("#modBox").dialog({closed:false});
+            $('#editDepartmentName').textbox('setValue',departmentName);
+            $('#editDepartmentId').textbox({
+                //value:data.department.departmentId
+                value:departmentId,
+                readonly:true
+            })
+            //通过ajax再请求一次后台查数据
+            // $("#modBox").dialog({closed:false});
+            // $.ajax({
+            //     url:"/departmentController",
+            //     type:"POST",
+            //     data:"departmentId=" + departmentId+"&option=queryone",
+            //     dataType:'json',
+            //     success:function(data) {
+            //         $('#editDepartmentName').textbox('setValue',data.department.departmentName);
+            //         $('#editDepartmentId').textbox({
+            //             //value:data.department.departmentId
+            //             value:departmentId,
+            //             readonly:true
+            //         })
+            //     }
+            // })
+        }
+        //修改
+        function edit() {
+            $('#modForm').form('submit', {
+                url:"/DepartmentController/edit",
+                onSubmit: function(parm){
+                    return $(this).form("validate");
+                },
+                success:function(data){
+                    $.messager.show({
+                        title:'消息',
+                        msg:data=="true"?'编辑成功':'编辑失败',
+                        timeout:1000,
+                        showType:'slide'
+                    });
+                    $('#modBox').dialog({closed:true});
+                    $("#tblDepartment").datagrid('reload');
+                }
+            });
+        }
+        //添加
+        function add() {
+            $('#addForm').form('submit',{
+                url:'/DepartmentController/add',
+                onSubmit: function(parm){
+                    //这里可以传一些表单外的数据
+                },
+                //成功调回函数，和ajax一样。
+                success:function(data){
+                    $.messager.show({
+                        title:'消息',
+                        msg:data=='true'?"新增成功":"新增失败",
+                        timeout:1000,
+                        showType:'slide'
+                    });
+                    $('#addForm').form('clear')
+                    //新增后关闭窗口
+                    $('#addBox').dialog({
+                        closed: true
+                    });
+                    //刷新列表
+                    $("#tblDepartment").datagrid('reload');
+                }
+            });
+        }
+        //删除
+        function del(departmentId)
+        {
+            $.messager.confirm('确认','您确认想要删除记录吗？',
+                function(r){
+                    if (r == true){
+                        $.ajax(
+                            {
+                                url:"/DepartmentController/del",
+                                type:"POST",
+                                data:"departmentId=" + departmentId,
+                                success:function(data) {
+                                    $.messager.show({
+                                        title:'消息',
+                                        msg:data=='true'?"删除成功":"删除失败",
+                                        timeout:1000,
+                                        showType:'slide'
+                                    });
+                                    //刷新列表
+                                    $("#tblDepartment").datagrid('reload');
+                                }
+                            }
+                        );
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit:true" id="useBox">
+    <!--部门列表-->
+    <div class="tableCon">
+        <table id="tblDepartment"></table>
+        <div id="barDepartment">
+                <a id="btnAdd" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"></a>
+        </div>
+    </div>
+    <!--新增界面-->
+    <div id="addBox">
+        <form id="addForm" method="post">
+            <div style="text-align: center;margin-top: 40px">
+                <label>部门名称:</label>
+                <input class="easyui-validatebox easyui-textbox" type="text" name="departmentName" data-options="required:true" />
+            </div>
+            <div style="text-align: center;margin-top: 20px">
+                <a id="submitButton" href="#" class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+            </div>
+        </form>
+    </div>
+    <!-- 编辑界面 -->
+    <div id="modBox">
+        <form id="modForm" method="post">
+            <div style="text-align: center;margin-top: 20px;">
+                <label for="editDepartmentId">部门编号:</label>
+                <input class="easyui-validatebox easyui-textbox"
+                       type="text" name="editDepartmentId"
+                       id="editDepartmentId"
+                       data-options="required:true" />
+            </div>
+            <div style="text-align: center;margin-top: 20px;">
+                <label for="editDepartmentName">部门名称:</label>
+                <input class="easyui-validatebox easyui-textbox"
+                       type="text" name="editDepartmentName"
+                       id="editDepartmentName"
+                       data-options="required:true" />
+            </div>
+            <div style="text-align: center;margin-top: 20px;">
+                <a id="editButton" class="easyui-linkbutton"
+                   iconCls="icon-ok" >提交</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

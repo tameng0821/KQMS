@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css"/>
+    <link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css"/>
+
+    <script src="js/jquery-easyui/jquery.min.js"></script>
+    <script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+    <script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script>
+        $(function(){
+
+            /* $("#NoticeTime").combobox({
+               onChange:function(newValue,oldValue){
+                         //这里的参数n是select改变后的value,o是改变前的value
+                        alert(newValue);
+               }
+           }); */
+
+            $("#btnCreate").click(function(){
+
+
+
+                $('#queryForm').form('submit', {
+                    url:"json/Notice.json",
+                    onSubmit: function(){
+                        return $(this).form("validate");
+                    },
+                    success:function(data){
+                        var date=$("#NoticeDate").val();
+                        var time=$("#NoticeTime").val();
+                        $("#notice").html(date+" ("+time+") 出勤情况汇总");
+
+                        var str="<table border='1'>";
+
+
+                        var jsonObj=JSON.parse(data);
+
+                        for(var i = 0;i<jsonObj.length;i++){
+                            var departmentName=jsonObj[i].departmentName;
+                            var employeeName=jsonObj[i].employeeName;
+                            var typeName=jsonObj[i].typeName;
+                            var onestr="<tr><td>"+departmentName+"</td><td>"+employeeName+"</td><td>"+typeName+"</td></tr>";
+                            str+=onestr;
+
+
+                        }
+                        str+="</table>";
+                        //alert(str);
+                        $("#NoticeDiv").html(str);
+                        /* $.messager.show({
+                            title:'消息',
+                            msg:data=="editTrue"?'编辑成功':'编辑失败',
+                            timeout:1000,
+                            showType:'slide'
+                        });
+                        $('#editDiv').dialog({closed:true});
+                        ininNoteList(); */
+                    }
+                });
+
+
+
+            });
+
+
+
+        });
+
+
+    </script>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit:true" id="useBox">
+    <div id="top">
+        <form id="queryForm" method="post">
+            <label for="NoticeDate">生成公告日期时间:</label></td>
+            <input class="easyui-datebox" name="NoticeDate" id="NoticeDate" data-options="required:true" style="width:200px"></td>
+            <select id="NoticeTime" class="easyui-combobox" name="NoticeTime"  style="width:80px;" data-options="panelHeight:45,required:true">
+                <option value="上午" selected>上午</option>
+                <option value="下午">下午</option>
+            </select>
+            <a id="btnCreate" class="easyui-linkbutton" iconCls='icon-ok'>生成</a>
+        </form>
+
+    </div>
+
+    <div>
+        <p>公告详情</p>
+        <br>
+        <p style="text-align: center;"  id="notice">2009-10-12 ()出勤状况</p>
+    </div>
+    <hr>
+    <div id="NoticeDiv">
+
+    </div>
+</div>
+
+</body>
+</html>

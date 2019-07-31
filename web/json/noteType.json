@@ -1,0 +1,6 @@
+[
+	{"typeId":0,"typeName":"全部"},
+	{"typeId":1001,"typeName":"事件"},
+	{"typeId":1002,"typeName":"病假"},
+	{"typeId":1003,"typeName":"婚假"}
+]

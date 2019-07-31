@@ -1,0 +1,10 @@
+[
+		{"departmentName":"人事部","employeeName":"张三","typeName":"病假"},
+		{"departmentName":"人事部","employeeName":"李四","typeName":"产假"},
+		{"departmentName":"财务部","employeeName":"王五","typeName":"病假"},
+		{"departmentName":"后勤部","employeeName":"赵六","typeName":"婚假"},
+		{"departmentName":"资源保障部","employeeName":"钱七","typeName":"病假"},
+		{"departmentName":"宣传部","employeeName":"郑八","typeName":"病假"}
+	
+	
+]

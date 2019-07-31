@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+
+		<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css" />
+		<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css" />
+
+		<script src="js/jquery-easyui/jquery.min.js"></script>
+		<script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+		<script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script>
+			$(function() {
+
+				//初始化table列表
+				ininNoteList();
+				initDialog();
+				initEmployeeList();
+				//点击icon事件
+				$("#addForm #employeeID").textbox({
+					icons: [{
+						iconCls:'icon-search',
+						handler: function(e){
+							$('#employeeListDiv').dialog({closed: false });
+							$("#SelectemployeeDiv").css("display","block");
+							$("#SelectoperatorDiv").css("display","none");
+							$("#EditemployeeDiv").css("display","none");
+							$("#EditoperatorDiv").css("display","none");
+						}
+					}]
+				});
+				$("#addForm #operatorID").textbox({
+					icons: [{
+						iconCls:'icon-search',
+						handler: function(e){
+							$('#employeeListDiv').dialog({closed: false });
+							$("#SelectemployeeDiv").css("display","none");
+							$("#SelectoperatorDiv").css("display","block");
+							$("#EditemployeeDiv").css("display","none");
+							$("#EditoperatorDiv").css("display","none");
+						},
+					}]
+				});
+				
+				$("#editForm #employeeID").textbox({
+					icons: [{
+						iconCls:'icon-search',
+						handler: function(e){
+							$('#employeeListDiv').dialog({closed: false });
+							$("#SelectemployeeDiv").css("display","none");
+							$("#SelectoperatorDiv").css("display","none");
+							$("#EditemployeeDiv").css("display","block");
+							$("#EditoperatorDiv").css("display","none");
+						}
+					}]
+				});
+				$("#editForm #operatorID").textbox({
+					icons: [{
+						iconCls:'icon-search',
+						handler: function(e){
+							$('#employeeListDiv').dialog({closed: false });
+							$("#SelectemployeeDiv").css("display","none");
+							$("#SelectoperatorDiv").css("display","none");
+							$("#EditemployeeDiv").css("display","none");
+							$("#EditoperatorDiv").css("display","block");
+						},
+					}]
+				});
+				//点击按钮事件
+				$("#btnSelectemployee").click(function() {
+						var row=$("#tblEmployeeList").datagrid("getSelected");
+						var id=row.employeeID;
+						var name=row.employeeName;
+						var card=row.cardNumber;
+						$('#employeeListDiv').dialog({closed: true});
+						$("#addForm #employeeID").textbox("setValue",id);
+						$("#addForm #employeeID").textbox("setText","("+name+","+id+","+","+card+")");
+						
+				});
+				$("#btnSelectoperator").click(function() {
+						var row=$("#tblEmployeeList").datagrid("getSelected");
+						var id=row.employeeID;
+						var name=row.employeeName;
+						var card=row.cardNumber;
+						$('#employeeListDiv').dialog({closed: true});
+						$("#addForm #operatorID").textbox("setValue",id);
+						$("#addForm #operatorID").textbox("setText","("+name+","+id+","+","+card+")");
+						
+				});
+				$("#btnEditemployee").click(function() {
+						var row=$("#tblEmployeeList").datagrid("getSelected");
+						var id=row.employeeID;
+						var name=row.employeeName;
+						var card=row.cardNumber;
+						$('#employeeListDiv').dialog({closed: true});
+						$("#editForm #employeeID").textbox("setValue",id);
+						$("#editForm #employeeID").textbox("setText","("+name+","+id+","+","+card+")");
+				});
+				$("#btnEditoperator").click(function() {
+						var row=$("#tblEmployeeList").datagrid("getSelected");
+						var id=row.employeeID;
+						var name=row.employeeName;
+						var card=row.cardNumber;
+						$('#employeeListDiv').dialog({closed: true});
+						$("#editForm #operatorID").textbox("setValue",id);
+						$("#editForm #operatorID").textbox("setText","("+name+","+id+","+","+card+")");
+				});
+				$("#btnEdit").click(function(){
+					edit();
+				})
+				$("#btnSave").click(function () {
+					add();
+				});
+				
+				$("#btnAdd").click(function(){
+					$('#addDiv').dialog({closed: false});
+				});
+				$("#btnInfo").click(function(){
+					$('#infoDiv').dialog({closed: true});		
+				})
+			});
+			function initDialog(){
+				$('#addDiv').dialog({    
+					title: '新增',    
+					width: 500,    
+					height: 450,
+					closed: true,
+					modal: true   
+				});
+				$('#editDiv').dialog({    
+					title: '编辑',    
+					width: 500,    
+					height: 450,
+					closed: true,
+					modal: true   
+				});
+				$('#infoDiv').dialog({    
+					title: '信息',    
+					width: 500,    
+					height: 450,
+					closed: true,
+					modal: true   
+				});
+				$('#employeeListDiv').dialog({    
+					title: '新增',    
+					width: 500,    
+					height: 450,
+					closed: true,
+					modal: true   
+				});
+			}  
+			function initEmployeeList(){
+				$('#tblEmployeeList').datagrid({    
+					url:"EmployeeController/query",
+					singleSelect:true,
+					fitColumns:true,
+					columns:[[    
+						{field:'employeeID',title:'员工编号'},    
+						{field:'cardNumber',title:'员工卡号'},    
+						{field:'employeeName',title:'员工姓名'}    
+					]]    
+				}); 
+			}
+			function ininNoteList(){
+				$('#tblNote').datagrid({
+                    url:'NoteController/queryByKeyWords',
+                    pagination:true,
+                    pageSize:3,
+                    pageList:[3,6,9],
+                    pageNumber:1,
+                    toolbar:"#barNote",
+                    rownumbers:true,
+                    queryParams:{
+                        isVerify:"",
+                        noteTypeId:0,
+                        employeeName:"",
+                        operatorName:"",
+                        leaveDate:""
+                    },
+					columns:[[    
+						{field:'fillInTime',title:'填表时间',width:'12.5%',align:'center'},
+                        {field:'cardNumber',title:'卡号',width:'12.5%',align:'center'},
+						{field:'employeeName',title:'申请人',width:'12.5%',align:'center'},
+						{field:'typeName',title:'请假类型',width:'12.5%',align:'center'},
+						{field:'startDate',title:'起始时间',width:'12.5%',align:'center'},
+						{field:'endDate',title:'结束时间',width:'12.5%',align:'center'},
+                        {field:'operatorName',title:'代理人',width:'12.5%',align:'center'},
+						{field:'opt',title:'操作',width:'12.5%',align:'center',
+							formatter:function(value , row , index)
+                            {
+                                var a = '<a href="#" id="editButton" onclick="openedit(' + row.noteId + ')" >编辑</a>&nbsp';
+                                var b = '<a href="#" id="editButton" onclick="del(' + row.noteId + ')" >删除</a>&nbsp';
+                                var c = '<a href="#" id="editButton" onclick="info(' + row.noteId + ')" >查看</a>&nbsp';
+                                return c + a + b;
+                            }}
+					]]    
+				});  
+			}
+			function add(){
+				$('#addForm').form('submit', {    
+					url:"NoteServlet?action=add",    
+					onSubmit: function(){    
+						return $(this).form("validate");
+					},    
+					success:function(data){    
+						$.messager.show({
+							title:'消息',
+							msg:data=="addTrue"?'新增成功':'新增失败',
+							timeout:1000,
+							showType:'slide'	
+						});	
+						$('#addDiv').dialog({closed:true});
+						ininNoteList();
+					}    
+				}); 
+			}
+			function info(noteID){
+				$("#infoDiv").dialog({closed:false});
+				$.ajax({
+					  	
+						url:"NoteServlet?action=queryByID",
+						type:"POST",
+						data:"noteID=" + noteID,
+						success:function(data){
+							eval("var str="+JSON.stringify(data));
+							eval("var obj="+str);
+							var employeeName;
+							var employeeCard;
+							var operatorName;
+							var operatorCard;
+							$.ajax({
+								  	async:false,
+									url:"EmployeeServlet?action=queryByID",
+									type:"POST",
+									data:"employeeID=" + obj.employeeID,
+									success:function(data1){
+										eval("var employee="+JSON.stringify(data1));
+										eval("var employeeobj="+employee);
+										employeeName= employeeobj.employeeName;
+										employeeCard= employeeobj.cardNumber;
+									}
+							});	
+							$.ajax({
+								  	async:false,
+									url:"EmployeeServlet?action=queryByID",
+									type:"POST",
+									data:"employeeID=" + obj.operatorID,
+									success:function(data2){
+										eval("var operator="+JSON.stringify(data2));
+										eval("var operatorobj="+operator);
+										operatorName= operatorobj.employeeName;
+										operatorCard= operatorobj.cardNumber;
+									}
+							});	
+							$('#infoForm').form('load',{
+								employeeID:"("+employeeName+","+obj.employeeID+","+employeeCard+")",
+								operatorID:"("+operatorName+","+obj.operatorID+","+operatorCard+")",
+								noteType:obj.noteType,
+								fillTime:obj.fillInTime,
+								cause:obj.cause,
+								startDate:obj.startDate,
+								startTime:obj.startTime,
+								endDate:obj.endDate,
+								endTime:obj.endTime,
+								directorySign:obj.directorySign,
+								administrationSign:obj.administrationSign,
+								presidentSign:obj.presidentSign,
+								isVerify:obj.isVerify
+							});
+						}
+				});	
+			}
+			function openedit(noteID){
+				
+				$("#editDiv").dialog({closed:false});
+				$.ajax({
+					  	
+						url:"NoteServlet?action=queryByID",
+						type:"POST",
+						data:"noteID=" + noteID,
+						success:function(data){
+							eval("var str="+JSON.stringify(data));
+							eval("var obj="+str);
+							var employeeName;
+							var employeeCard;
+							var operatorName;
+							var operatorCard;
+							$.ajax({
+								  	async:false,
+									url:"EmployeeServlet?action=queryByID",
+									type:"POST",
+									data:"employeeID=" + obj.employeeID,
+									success:function(data1){
+										eval("var employee="+JSON.stringify(data1));
+										eval("var employeeobj="+employee);
+										employeeName= employeeobj.employeeName;
+										employeeCard= employeeobj.cardNumber;
+										
+									}
+							});	
+							$.ajax({
+								  	async:false,
+									url:"EmployeeServlet?action=queryByID",
+									type:"POST",
+									data:"employeeID=" + obj.operatorID,
+									success:function(data2){
+										eval("var operator="+JSON.stringify(data2));
+										eval("var operatorobj="+operator);
+										operatorName= operatorobj.employeeName;
+										operatorCard= operatorobj.cardNumber;
+										
+									}
+							});	
+							
+							
+							$('#editForm').form('load',{
+								//employeeID:"("+employeeName+","+obj.employeeID+","+employeeCard+")",
+								//operatorID:"("+operatorName+","+obj.operatorID+","+operatorCard+")",
+								noteType:obj.noteType,
+								fillTime:obj.fillInTime,
+								cause:obj.cause,
+								startDate:obj.startDate,
+								startTime:obj.startTime,
+								endDate:obj.endDate,
+								endTime:obj.endTime,
+								directorySign:obj.directorySign,
+								administrationSign:obj.administrationSign,
+								presidentSign:obj.presidentSign,
+								isVerify:obj.isVerify,
+								noteID:obj.noteID
+							});
+							$("#editForm #employeeID").textbox("setValue",obj.employeeID);
+							$("#editForm #employeeID").textbox("setText","("+employeeName+","+obj.employeeID+","+employeeCard+")");
+							$("#editForm #operatorID").textbox("setValue",obj.operatorID);
+							$("#editForm #operatorID").textbox("setText","("+operatorName+","+obj.operatorID+","+operatorCard+")");
+				
+						}
+				});
+			}
+			function del(noteID){
+				$.messager.confirm('确认','您确认想要删除记录吗？',
+						function(r){    
+						    if (r == true){    
+								$.ajax({
+										url:"NoteServlet?action=delete",
+										type:"POST",
+										data:"noteID=" + noteID,
+										success:function(data){
+											$.messager.show({
+												title:'消息',
+												msg:data=="deleteTrue"?'删除成功':'删除失败',
+												timeout:1000,
+												showType:'slide'	
+											});	
+											ininNoteList();
+										}
+								});		         
+							}    
+						}
+				);
+			}
+			function edit(){
+				$('#editForm').form('submit', {    
+					url:"NoteServlet?action=edit",    
+					onSubmit: function(){    
+						return $(this).form("validate");
+					},    
+					success:function(data){    
+				
+						$.messager.show({
+							title:'消息',
+							msg:data=="editTrue"?'编辑成功':'编辑失败',
+							timeout:1000,
+							showType:'slide'	
+						});	
+						$('#editDiv').dialog({closed:true});
+						ininNoteList();
+					}    
+				}); 
+				
+			}
+		</script>
+	</head>
+	<body>
+		
+		<div class="easyui-layout" data-options="fit:true" id="useBox">
+			<form id="queryForm" method="post">
+				
+				<div style="text-align: center;margin-top: 25px;">
+					<label for="isVerify">是否审核通过:</label>
+					<select id="isVerify" name="isVerify" class="easyui-combobox" style="width: 110px">
+						<option value="-1">全部</option>
+						<option value="1">同意</option>
+						<option value="0">不通过</option>
+					</select>
+
+					<label for="noteType">请假类型:</label>
+					<!--这里需要一个URL-->
+					<input id="noteType" class="easyui-combobox" name="noteType" style="width: 110px" data-options="valueField:'typeID',textField:'typeName',url:'NoteController/queryByCatecory'" />
+				</div>
+				<div style="text-align: center;margin-top: 25px;">
+					<label for="employeeName">员工姓名:</label>
+					<input class="easyui-textbox" style="width:110px" id="employeeName" name="employeeName">
+					<label for="operatorName">代理人姓名:</label>
+					<input class="easyui-textbox" style="width:110px" id="operatorName" name="operatorName">
+
+					<label for="leaveDate">请假日期:</label>
+					<input class="easyui-datebox" style="width:110px" id="leaveDate" name="leaveDate">
+				</div>
+				<div style="text-align: center;margin-top: 25px;">
+					<a id="queryButton" class="easyui-linkbutton" iconCls='icon-search'>确定</a>
+				</div>
+			</form>
+			<div class="tableCon" style="margin-top: 20px">
+				<table id="tblNote"></table>
+			</div>
+			<div id="barNote">
+				<a id="btnAdd" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+			</div>
+		</div>
+		<div id="addDiv">
+			<form id="addForm" method="post">
+				<table style="margin: 0 auto;border-collapse:separate; border-spacing:0px 20px;">
+					<tr>
+						<td><label for="employeeID">申请人:</label></td>
+						<td><input class="easyui-textbox easyui-validatebox" data-options="required:true" id="employeeID"
+									name="employeeID" style="width: 200px;" /></td>
+					</tr>
+					<tr>
+						<td><label for="operatorID">代理人:</label></td>
+						<td><input class="easyui-textbox easyui-validatebox" data-options="required:true" id="operatorID"
+									name="operatorID" style="width: 200px;" /></td>
+					</tr>
+					<tr>
+						<td><label for="noteType">请假类型:</label></td>
+						<td><input id="noteType" class="easyui-combobox" name="noteType" data-options="required:true,panelHeight:180,valueField:'typeID',textField:'typeName',url:'json/T03_data.json'" style="width:120px;"/></td>
+					</tr>
+					
+					<tr>
+						<td><label for="fillTime">填写时间:</label></td>
+						<td><input class="easyui-datetimebox" name="fillTime" id="fillTime" data-options="required:true" style="width:120px"></td>
+					</tr>
+					<tr>
+						<td><label for="cause">请假事由:</label></td>
+						<td><input class="easyui-textbox" name="cause" id="cause" data-options="multiline:true,required:true" style="width:200px"></td>
+					</tr>
+					
+					<tr>
+						<td><label for="startDate">请假起始时间:</label></td>
+						<td><input class="easyui-datebox" style="width:120px" id="startDate" name="startDate" data-options="required:true">
+							<select id="startTime" class="easyui-combobox" name="startTime" style="width:80px;" data-options="panelHeight:45,required:true">
+								<option value="上午">上午</option>
+								<option value="下午">下午</option>
+							</select>
+						</td>
+							
+					</tr>
+					<tr>
+						<td><label for="endDate">请假结束时间:</label></td>
+						<td><input class="easyui-datebox" style="width:120px" id="endDate" name="endDate" data-options="required:true">
+							<select id="endTime" class="easyui-combobox" name="endTime" style="width:80px;"  data-options="panelHeight:45,required:true">
+								<option value="上午">上午</option>
+								<option value="下午">下午</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="directorySign">主管经理意见:</label></td>
+						<td><input class="easyui-textbox" name="directorySign" id="directorySign" data-options="multiline:true" style="width:200px"></td>
+					</tr>
+					<tr>
+						<td><label for="administrationSign">行政经理意见:</label></td>
+						<td><input class="easyui-textbox" name="administrationSign" id="administrationSign" data-options="multiline:true" style="width:200px"></td>
+					</tr>
+					
+					<tr>
+						<td><label for="presidentSign">总裁意见:</label></td>
+						<td><input class="easyui-textbox" name="presidentSign" id="presidentSign" data-options="multiline:true" style="width:200px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" colspan="2">
+						 	<input type="radio" name="isVerify" value="0" checked="checked">不同意
+						 	<input type="radio" name="isVerify" value="1">同意
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" colspan="2"><a id="btnSave" class="easyui-linkbutton" iconCls='icon-ok'>保存</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="infoDiv">
+			<form id="infoForm" method="post">
+				<table style="margin: 0 auto;border-collapse:separate; border-spacing:0px 20px;">
+					<tr>
+						<td><label for="employeeID">申请人:</label></td>
+						<td><input class="easyui-textbox easyui-validatebox" data-options="required:true,readonly:true" id="employeeID"
+									name="employeeID" style="width: 300px;" /></td>
+					</tr>
+					<tr>
+						<td><label for="operatorID">代理人:</label></td>
+						<td><input class="easyui-textbox easyui-validatebox" data-options="required:true,readonly:true" id="operatorID"
+									name="operatorID" style="width: 300px;" /></td>
+					</tr>
+					<tr>
+						<td><label for="noteType">请假类型:</label></td>
+						<td><input id="noteType" class="easyui-combobox" name="noteType" data-options="readonly:true,required:true,panelHeight:180,valueField:'typeID',textField:'typeName',url:'json/T03_data.json'" style="width:80px;"/></td>
+					</tr>
+					
+					<tr>
+						<td><label for="fillTime">填写时间:</label></td>
+						<td><input class="easyui-datetimebox" name="fillTime" id="fillTime" data-options="required:true,readonly:true" style="width:150px"></td>
+					</tr>
+					<tr>
+						<td><label for="cause">请假事由:</label></td>
+						<td><input class="easyui-textbox" name="cause" id="cause" data-options="multiline:true,required:true,readonly:true" style="width:300px"></td>
+					</tr>
+					
+					<tr>
+						<td><label for="startDate">请假起始时间:</label></td>
+						<td><input class="easyui-datebox" style="width:100px" id="startDate" name="startDate" data-options="required:true,readonly:true">
+							<select id="startTime" class="easyui-combobox" name="startTime" style="width:80px;" data-options="panelHeight:45,required:true,readonly:true">
+								<option value="上午">上午</option>
+								<option value="下午">下午</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="endDate">请假结束时间:</label></td>
+						<td><input class="easyui-datebox" style="width:100px" id="endDate" name="endDate" data-options="required:true,readonly:true">
+							<select id="endTime" class="easyui-combobox" name="endTime" style="width:80px;"  data-options="panelHeight:45,required:true,readonly:true">
+								<option value="上午">上午</option>
+								<option value="下午">下午</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="directorySign">主管经理意见:</label></td>
+						<td><input class="easyui-textbox" name="directorySign" id="directorySign" data-options="multiline:true,readonly:true" style="width:300px"></td>
+					</tr>
+					<tr>
+						<td><label for="administrationSign">行政经理意见:</label></td>
+						<td><input class="easyui-textbox" name="administrationSign" id="administrationSign" data-options="multiline:true,readonly:true" style="width:300px"></td>
+					</tr>
+					
+					<tr>
+						<td><label for="presidentSign">总裁意见:</label></td>
+						<td><input class="easyui-textbox" name="presidentSign" id="presidentSign" data-options="multiline:true,readonly:true" style="width:300px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" colspan="2">
+						 	<input type="radio" name="isVerify" value="0" checked="checked" disabled>不同意
+						 	<input type="radio" name="isVerify" value="1" disabled>同意
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" colspan="2"><a id="btnInfo" class="easyui-linkbutton" iconCls='icon-ok'>关闭</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="editDiv">
+			<form id="editForm" method="post">
+				<table style="margin: 0 auto;border-collapse:separate; border-spacing:0px 20px;">
+					<tr>
+						<td><label for="employeeID">申请人:</label></td>
+						<td><input class="easyui-textbox easyui-validatebox" data-options="required:true" id="employeeID"
+									name="employeeID" style="width: 300px;" /></td>
+					</tr>
+					<tr>
+						<td><label for="operatorID">代理人:</label></td>
+						<td><input class="easyui-textbox easyui-validatebox" data-options="required:true" id="operatorID"
+									name="operatorID" style="width: 300px;" /></td>
+					</tr>
+					<tr>
+						<td><label for="noteType">请假类型:</label></td>
+						<td><input id="noteType" class="easyui-combobox" name="noteType" data-options="required:true,panelHeight:180,valueField:'typeID',textField:'typeName',url:'json/T03_data.json'" style="width:80px;"/></td>
+					</tr>
+					
+					<tr>
+						<td><label for="fillTime">填写时间:</label></td>
+						<td><input class="easyui-datetimebox" name="fillTime" id="fillTime" data-options="required:true" style="width:150px"></td>
+					</tr>
+					<tr>
+						<td><label for="cause">请假事由:</label></td>
+						<td><input class="easyui-textbox" name="cause" id="cause" data-options="multiline:true,required:true" style="width:300px"></td>
+					</tr>
+					<tr>
+						<td><label for="startDate">请假起始时间:</label></td>
+						<td><input class="easyui-datebox" style="width:100px" id="startDate" name="startDate" data-options="required:true">
+							<select id="startTime" class="easyui-combobox" name="startTime" style="width:80px;" data-options="panelHeight:45,required:true">
+								<option value="上午">上午</option>
+								<option value="下午">下午</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="endDate">请假结束时间:</label></td>
+						<td><input class="easyui-datebox" style="width:100px" id="endDate" name="endDate" data-options="required:true">
+							<select id="endTime" class="easyui-combobox" name="endTime" style="width:80px;"  data-options="panelHeight:45,required:true">
+								<option value="上午">上午</option>
+								<option value="下午">下午</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="directorySign">主管经理意见:</label></td>
+						<td><input class="easyui-textbox" name="directorySign" id="directorySign" data-options="multiline:true" style="width:300px"></td>
+					</tr>
+					<tr>
+						<td><label for="administrationSign">行政经理意见:</label></td>
+						<td><input class="easyui-textbox" name="administrationSign" id="administrationSign" data-options="multiline:true" style="width:300px"></td>
+					</tr>
+					<tr>
+						<td><label for="presidentSign">总裁意见:</label></td>
+						<td><input class="easyui-textbox" name="presidentSign" id="presidentSign" data-options="multiline:true" style="width:300px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" colspan="2">
+						 	<input type="radio" name="isVerify" value="0" checked="checked">不同意
+						 	<input type="radio" name="isVerify" value="1">同意
+							<input type="hidden" name="noteID" />
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" colspan="2"><a id="btnEdit" class="easyui-linkbutton" iconCls='icon-ok'>修改</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="employeeListDiv">
+			<div class="tableCon">
+				<table id="tblEmployeeList"></table>
+			</div>
+			<div style="text-align: center;margin-top: 20px;" id="SelectemployeeDiv">
+					<a id="btnSelectemployee" class="easyui-linkbutton" iconCls='icon-ok'>确定</a>
+			</div>
+			<div style="text-align: center;margin-top: 20px;" id="SelectoperatorDiv">
+					<a id="btnSelectoperator" class="easyui-linkbutton" iconCls='icon-ok'>确定</a>
+			</div>
+			
+			<div style="text-align: center;margin-top: 20px;" id="EditemployeeDiv">
+					<a id="btnEditemployee" class="easyui-linkbutton" iconCls='icon-ok'>确定</a>
+			</div>
+			<div style="text-align: center;margin-top: 20px;" id="EditoperatorDiv">
+					<a id="btnEditoperator" class="easyui-linkbutton" iconCls='icon-ok'>确定</a>
+			</div>
+		</div>
+	</body>
+</html>

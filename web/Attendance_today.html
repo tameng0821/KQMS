@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css" />
+		<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css" />
+
+		<script src="js/jquery-easyui/jquery.min.js"></script>
+		<script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+		<script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script>
+			$(function() {
+					  
+				initAttendanceList();
+				getSelect();
+			});
+			 function initAttendanceList(){
+				
+				$("#tblAttendanceList").datagrid({
+					url:'json/attendance.json', 
+					rownumbers:true,
+					singleSelect:true,
+					toolbar:'#tblAttendance',
+					columns:[[    
+						{field:'employeeID',title:'员工编号',width:'12.5%',align:'center'},
+						{field:'cardNumber',title:'员工卡号',width:'12.5%',align:'center'},
+						{field:'employeeName',title:'员工姓名',width:'12.5%',align:'center'},
+						{field:'departmentName',title:'部门名称',width:'12.5%',align:'center'},
+						{field:'attendanceDate',title:'考勤日期',width:'12.5%',align:'center'},
+						{field:'attendanceFlag',title:'考勤时间',width:'12.5%',align:'center'},
+						{field:'attendanceType',title:'考勤状态',width:'12.5%',align:'center',
+							formatter:function(value,row,index){
+								//改成下拉列表
+								var str='<select onchange="select_onclick ( this,'+row.employeeID+', \''+row.attendanceDate+'\' )" >';					
+								return str+getSelect();					
+							}
+						},
+						{field:'opt1',title:'单据',width:'12.5%',align:'center'}
+					]]
+				});
+			}
+			 function getSelect() {
+				 var str="";
+				 $.ajax({
+					  	async:false,
+						url:"AttendanceTypeServlet?action=queryAll",
+						type:"POST",
+						success:function(data){
+							var jsonObj=JSON.parse(data);
+							for(var i=0;i<jsonObj.length;i++){
+								var typeID=jsonObj[i].typeID;
+								var typeName=jsonObj[i].typeName;
+								var typeCategory=jsonObj[i].typeCategory
+								str+="<option value=\'"+typeID+"\' typeCategory='"+typeCategory+"' >"+typeName+"</option>"
+							}
+							str+="</select>";
+							
+							//jsonObj[1].typeName.val();
+						}
+				});
+				 return str;
+			}
+			 function select_onclick(obj,employeeID,attendanceDate){
+			
+				var typeID =$(obj).find("option:selected").val();
+				var typeCategory=$(obj).find("option:selected").attr("typeCategory");
+				var typeName =$(obj).find("option:selected").text();
+				 //两个值 查询请假表，返回表单。
+				if("1"==typeCategory){
+					$(obj).parent().parent().next().find("div").html("回带编号");
+				}else if("0"==typeCategory){
+					$(obj).parent().parent().next().find("div").html("");
+				}
+			} 
+		</script>
+	</head>
+	<body>
+		<div class="easyui-layout" data-options="fit:true" id="useBox">
+
+			 <form id="queryForm" method="post">
+				 <div style="margin-top: 20px">
+					 <label for="departmentID">部门名称:</label>
+					 <!--这里需要一个url-->
+					 <input id="departmentID" class="easyui-combobox" name="departmentID"
+							data-options="valueField:'departmentID',textField:'departmentName',url:'DepartmentServlet?action=queryAll'" />
+					 <label for="attendanceDate">考勤日期:</label>
+					 <input id="attendanceDate" class="easyui-datebox" name="attendanceDate" />
+					 <label for="attendanceFlag">考勤时间段:</label>
+					 <select id="attendanceFlag" class="easyui-combobox" name="attendanceFlag" style="width:80px;"  data-options="panelHeight:45,required:true">
+						 <option value="上午">上午</option>
+						 <option value="下午">下午</option>
+					 </select>
+					 <a id="btnQuery" class="easyui-linkbutton" iconCls="icon-search" >查看</a>
+				 </div>
+				
+			</form> 
+			<div class="tableCon" style="margin-top:20px">
+				<table id="tblAttendanceList"></table>
+				<div id="tblAttendance">
+					<a id="btnSava" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">保存</a>
+				</div>
+	
+			</div>  
+			
+		</div>
+	</body>
+</html>

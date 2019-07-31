@@ -1,0 +1,9 @@
+[
+		{"departmentName":"人事部","cardNumber":"A10001001","employeeName":"张三","Attendance_1":"1","Attendance_2":"2","Attendance_3":"3","Attendance_4":"4","Attendance_5":"5","Attendance_6":"6","Attendance_7":"7","day":"0.5","shouldDay":"0.5"},
+		{"departmentName":"人事部","cardNumber":"A10001002","employeeName":"李四","Attendance_1":"1","Attendance_2":"2","Attendance_3":"3","Attendance_4":"4","Attendance_5":"5","Attendance_6":"6","Attendance_7":"7","day":"0.5","shouldDay":"5.5"},
+		{"departmentName":"财务部","cardNumber":"A10001003","employeeName":"王五","Attendance_1":"1","Attendance_2":"2","Attendance_3":"3","Attendance_4":"4","Attendance_5":"5","Attendance_6":"6","Attendance_7":"7","day":"0.5","shouldDay":"4.5"},
+		{"departmentName":"财务部","cardNumber":"A10001004","employeeName":"赵六","Attendance_1":"1","Attendance_2":"2","Attendance_3":"3","Attendance_4":"4","Attendance_5":"5","Attendance_6":"6","Attendance_7":"7","day":"0.5","shouldDay":"3.5"},
+		{"departmentName":"人事部","cardNumber":"A10001005","employeeName":"钱七","Attendance_1":"1","Attendance_2":"2","Attendance_3":"3","Attendance_4":"4","Attendance_5":"5","Attendance_6":"6","Attendance_7":"7","day":"0.5","shouldDay":"2.5"},
+		{"departmentName":"财务部","cardNumber":"A10001006","employeeName":"郑八","Attendance_1":"1","Attendance_2":"2","Attendance_3":"3","Attendance_4":"4","Attendance_5":"5","Attendance_6":"6","Attendance_7":"7","day":"0.5","shouldDay":"1.5"}
+		
+]

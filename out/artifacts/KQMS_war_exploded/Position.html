@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css"/>
+    <link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="css/main.css">
+
+    <script src="js/jquery-easyui/jquery.min.js"></script>
+    <script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+    <script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            initPositionList();
+            initDialog();
+            $("#btnAdd").click(
+                openAddBox
+            );
+            $("#submitButton").click(
+                add
+            );
+            $("#editButton").click(
+                edit
+            );
+        });
+
+        function initDialog()
+        {
+            $('#addBox').dialog({
+                title: '新增职位',
+                width: 400,
+                height: 200,
+                closed: true,
+                modal: true
+            });
+
+            $('#modBox').dialog({
+                title: '编辑职位',
+                width: 400,
+                height: 200,
+                closed: true,
+                modal: true
+            });
+        }
+        //打开新增窗口
+        function openAddBox() {
+            $('#addBox').dialog({
+                closed: false
+            });
+        }
+        //初始化部门列表
+        function initPositionList() {
+            $("#tblPosition").datagrid({
+                url:'/PositionController/query',
+                toolbar:'#barPosition',
+                columns:[[
+                    {field:'positionID',title:'职位编号',width:'33%',align:'center'},
+                    {field:'positionName',title:'职位名称',width:'33%',align:'center'},
+                    {field:'option',title:'操作',width:'33%',align:'center',formatter:function (value,row,index) {
+                            var editerstr='<a href="#" class="easyui-linkbutton" data-options=' +
+                                '"iconCls:\'icon-edit\',plain:true" onclick="openEdit('+row.positionID+','+'\''+row.positionName +'\')">编辑</a>&nbsp&nbsp&nbsp';
+                            var deletestr = '<a href="#" class="easyui-linkbutton" data-options=' +
+                                '"iconCls:\'icon-edit\',plain:true" onclick="del(' + row.positionID + ')">删除</a>';
+                            return editerstr+deletestr;
+                        }},
+                ]]
+            });
+        }
+        function openEdit(positionID,positionName){
+            //调用函数的时候直接将值传过来
+            $("#modBox").dialog({closed:false});
+            $('#editPositionName').textbox('setValue',positionName);
+            $('#editPositionId').textbox({
+                value:positionID,
+                readonly:true
+            })
+            //通过ajax再请求一次后台查数据
+            // $("#modBox").dialog({closed:false});
+            // $.ajax({
+            //     url:"/positionController",
+            //     type:"POST",
+            //     data:"positionId=" + positionID+"&option=queryone",
+            //     dataType:'json',
+            //     success:function(data) {
+            //         $('#editPositionName').textbox('setValue',data.position.positionName);
+            //         $('#editPositionId').textbox({
+            //             //value:data.position.positionId
+            //             value:positionID,
+            //             readonly:true
+            //         })
+            //     }
+            // })
+        }
+        //修改
+        function edit() {
+            $('#modForm').form('submit', {
+                url:"/PositionController/edit",
+                onSubmit: function(parm){
+                    return $(this).form("validate");
+                },
+                success:function(data){
+                    $.messager.show({
+                        title:'消息',
+                        msg:data=="true"?'编辑成功':'编辑失败',
+                        timeout:1000,
+                        showType:'slide'
+                    });
+                    $('#modBox').dialog({closed:true});
+                    $("#tblPosition").datagrid('reload');
+                }
+            });
+        }
+        function add() {
+            $('#addForm').form('submit',{
+                url:'/PositionController/add',
+                onSubmit: function(parm){
+                    //这里可以传一些表单外的数据
+                },
+                //成功调回函数，和ajax一样。
+                success:function(data){
+                    $.messager.show({
+                        title:'消息',
+                        msg:data=='true'?"新增成功":"新增失败",
+                        timeout:1000,
+                        showType:'slide'
+                    });
+                    //新增后关闭窗口
+                    $('#addBox').dialog({
+                        closed: true
+                    });
+                    //刷新列表
+                    $("#tblPosition").datagrid('reload');
+                }
+            });
+        }
+        //删除
+        function del(positionID)
+        {
+            $.messager.confirm('确认','您确认想要删除记录吗？',
+                function(r){
+                    if (r == true){
+                        $.ajax(
+                            {
+                                url:"/PositionController/del",
+                                type:"POST",
+                                data:"positionId=" + positionID,
+                                success:function(data) {
+                                    $.messager.show({
+                                        title:'消息',
+                                        msg:data=='true'?"删除成功":"删除失败",
+                                        timeout:1000,
+                                        showType:'slide'
+                                    });
+                                    //新增后关闭窗口
+                                    $('#addBox').dialog({
+                                        closed: true
+                                    });
+                                    //刷新列表
+                                    $("#tblPosition").datagrid('reload');
+                                }
+                            }
+                        );
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit:true" id="useBox">
+    <!--部门列表-->
+    <div class="tableCon">
+        <table id="tblPosition"></table>
+        <div id="barPosition">
+                <a id="btnAdd" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"></a>
+        </div>
+    </div>
+    <!--新增界面-->
+    <div id="addBox">
+        <form id="addForm" method="post">
+            <div style="text-align: center;margin-top: 40px">
+                <label>部门名称:</label>
+                <input class="easyui-validatebox easyui-textbox" type="text" name="positionName" data-options="required:true" />
+            </div>
+            <div style="text-align: center;margin-top: 20px">
+                <a id="submitButton" href="#" class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+            </div>
+        </form>
+    </div>
+    <!-- 编辑界面 -->
+    <div id="modBox">
+        <form id="modForm" method="post">
+            <div style="text-align: center;margin-top: 20px;">
+                <label for="editpositionId">部门编号:</label>
+                <input class="easyui-validatebox easyui-textbox"
+                       type="text" name="editPositionId"
+                       id="editPositionId"
+                       data-options="required:true" />
+            </div>
+            <div style="text-align: center;margin-top: 20px;">
+                <label for="editPositionName">部门名称:</label>
+                <input class="easyui-validatebox easyui-textbox"
+                       type="text" name="editPositionName"
+                       id="editPositionName"
+                       data-options="required:true" />
+            </div>
+            <div style="text-align: center;margin-top: 20px;">
+                <a id="editButton" class="easyui-linkbutton"
+                   iconCls="icon-ok" >提交</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

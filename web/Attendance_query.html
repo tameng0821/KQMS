@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css"/>
+<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css"/>
+
+<script src="js/jquery-easyui/jquery.min.js"></script>
+<script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+<script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+<script>
+	$(function(){
+		initNotetypeTd();
+		initNoteList();
+	})
+	function initNotetypeTd(){
+		 $.ajax({
+			  	async:false,
+				url:"AttendanceTypeServlet?action=queryAll",
+				type:"POST",
+				success:function(data){
+					var str="";
+					var jsonObj=JSON.parse(data);
+					for(var i = 0;i<jsonObj.length;i++){
+						var typeCategory=jsonObj[i].typeCategory;
+						var typeID=jsonObj[i].typeID;
+						var typeName=jsonObj[i].typeName;
+						var onestr="<input  type='checkbox' name='Notetype' value='"+typeID+"'>"+typeName;
+						str+=onestr;
+					}		
+					$("#NotetypeTd").html(str);				
+				}
+		});		
+	}
+	function initNoteList(){
+		$('#tblNote').datagrid({
+			url:"json/QueryNote.json",		
+			columns:[[    
+				{field:'cardNumber',title:'员工卡号',width:'14.28%',algin:'center'},
+				{field:'employeeName',title:'姓名',width:'14.28%',algin:'center'},
+				{field:'fillInTime',title:'出勤日期',width:'14.28%',algin:'center'},
+				{field:'time1',title:'上午',width:'14.28%',algin:'center'},
+				{field:'AttendanceType1',title:'状态',width:'14.28%',algin:'center'},
+				{field:'time2',title:'下午',width:'14.28%',algin:'center'},
+				{field:'AttendanceType2',title:'状态',width:'14.28%',algin:'center'}
+			]]
+		});
+	}
+</script>
+</head>
+<body>
+		<div class="easyui-layout" data-options="fit:true" id="useBox">
+	
+			<form id="queryForm" method="post">
+				<table>
+					<tr>
+						<td><input type="radio" name="queryType" value="1" checked="checked"></td>	
+						<td><label for="queryByDate">按年月日查询:</label>
+							<input id="queryDate" name="queryDate" class="easyui-datebox">
+						</td>	
+					</tr>
+					<tr>
+						<td><input type="radio" name="queryType" value="2" ></td>
+						<td>
+							<label >按时间段查询:</label>
+							<label for="startDate">开始日期:</label>
+							<input id="startDate" name="startDate" class="easyui-datebox">
+							<label for="endDate">结束日期:</label>
+							<input id="startDate" name="startDate" class="easyui-datebox">
+						</td>			
+					</tr>
+					<tr>
+						<td>出勤状态</td>
+						<td id="NotetypeTd"></td>
+					</tr>
+					<tr>
+						<td>部门</td>
+						<td id="departmentTd">
+							<input id="departmentID" class="easyui-combobox" name="departmentID"   
+									data-options="valueField:'departmentID',textField:'departmentName',url:'DepartmentServlet?action=queryAll'" />
+							<label>员工姓名</label>	
+							<input class="easyui-textbox" style="width:100px" id="employeeName" name="employeeName">
+							<a id="btnSava" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true">查询</a>	
+							<a id="btnSava" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true">导出Excel</a>	
+						</td>
+					</tr>
+				</table>				
+			</form>		
+			<hr>
+			<div style="text-align: center;margin-top: 20px;" id="NoteDiv">
+				<p>考勤记录</p>
+					<table id="tblNote"></table>
+			</div>
+		</div>
+		
+</body>
+</html>

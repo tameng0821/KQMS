@@ -1,0 +1,6 @@
+[
+	{"employeeId":1001,"cardNumber":"A001","employeeName":"张三丰"},
+	{"employeeId":1002,"cardNumber":"A002","employeeName":"杨玉环"},
+	{"employeeId":1003,"cardNumber":"A003","employeeName":"杨广"},
+	{"employeeId":1004,"cardNumber":"A004","employeeName":"曹操"}
+]

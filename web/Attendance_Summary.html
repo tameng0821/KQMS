@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css"/>
+<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css"/>
+
+<script src="js/jquery-easyui/jquery.min.js"></script>
+<script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+<script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+	$(function(){
+		getMonth();
+		initNoteList();
+	})
+	function getMonth(){
+		var tds = false;
+		$("#s_order_month").datebox({  
+			onShowPanel:function(){  
+				var p = $('#s_order_month').datebox('panel');  
+				p.find('span.calendar-text').trigger('click');  
+				p.find(".datebox-button-a").eq(0).hide();  
+				
+				var span = p.find('span.calendar-text');  
+				//屏蔽选择今天的按钮  
+				p.find('.calendar-text').hide();  
+				//输入框原本可填，会触发事件，屏蔽掉  
+				p.find('.calendar-menu-year').attr("readonly","readonly");  
+				if (!tds)//初始化只需要捆绑一次事件就够了  
+				setTimeout(function () {  
+					tds =p.find('div.calendar-menu-month-inner td');  
+					tds.click(function (e) {  
+						e.stopPropagation(); //禁止冒泡执行easyui给月份绑定的事件  
+						var year = /\d{4}/.exec(span.html())[0]//得到年份  
+						month = parseInt($(this).attr('abbr'), 10); //月份  
+						$('#s_order_month').datebox('hidePanel').datebox('setValue', year + '-' + month + '-' + '01'); //设置日期的值  
+					});  
+				});  
+			},  
+			formatter: function (d) {//设置格式  
+				return d.getFullYear() + '-' + (d.getMonth()<9?'0'+(d.getMonth()+1):(d.getMonth()+1));  
+			}  
+		});  
+	}
+	function initNoteList(){
+		
+		$('#tblNote').datagrid({    
+			url:"json/QueryNoteAll.json",
+			pagination:true,
+			pageSize:10,
+			pageNumber:1,
+			pageList:[10,20,30,40],
+			rownumbers:true,
+			fitColumns:true,
+			columns:[[    
+				{field:'departmentName',title:'部门'},
+				{field:'cardNumber',title:'卡号'},
+				{field:'employeeName',title:'姓名'},		
+				{field:'Attendance_1',title:'迟到'},	
+				{field:'Attendance_2',title:'病假'},	
+				{field:'Attendance_3',title:'事假'},	
+				{field:'Attendance_4',title:'产假'},	
+				{field:'Attendance_5',title:'丧假'},	
+				{field:'Attendance_6',title:'婚假'},	
+				{field:'Attendance_7',title:'旷工'},	
+				{field:'day',title:'出勤天数'},		
+				{field:'shouldDay',title:'应出勤天数'}    
+				
+			]]    
+		});
+	}
+</script>
+</head>
+<body>
+		<div class="easyui-layout" data-options="fit:true" id="useBox">
+	
+			<form id="queryForm" method="post">
+				<table>
+					<tr>
+						<td><input type="radio" name="queryType" value="1" checked="checked"></td>	
+						<td><label for="queryByDate">汇总按年月:</label>
+							<input type="text" name="s_order_month" id="s_order_month"/>  
+						</td>	
+					</tr>
+					<tr>
+						<td><input type="radio" name="queryType" value="2" ></td>
+						<td>
+							<label >汇总按时间段:</label>
+							<label for="startDate">开始日期:</label>
+							<input id="startDate" name="startDate" class="easyui-datebox">
+							<label for="endDate">结束日期:</label>
+							<input id="startDate" name="startDate" class="easyui-datebox">
+						</td>			
+					</tr>
+					
+					<tr>
+						<td>部门</td>
+						<td id="departmentTd">
+							<input id="departmentID" class="easyui-combobox" name="departmentID"   
+									data-options="valueField:'departmentID',textField:'departmentName',url:'DepartmentServlet?action=queryAll'" />
+							<label>员工姓名</label>	
+							<input class="easyui-textbox" style="width:100px" id="employeeName" name="employeeName">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<a id="btnSava" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true">查询</a>	
+							<a id="btnSava" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true">导出Excel</a>		
+						</td>
+					</tr>
+				</table>				
+			</form>		
+			<hr>
+			<div style="text-align: center;margin-top: 20px;" id="NoteDiv">
+				<p>考勤记录</p>
+					<table id="tblNote"></table>
+			</div>
+		</div>
+		
+</body>
+</html>

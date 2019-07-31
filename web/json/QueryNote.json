@@ -1,0 +1,9 @@
+[
+		{"cardNumber":"A1001001","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"出勤","AttendanceType2":"出勤"},
+		{"cardNumber":"A1001002","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"迟到","AttendanceType2":"出勤"},
+		{"cardNumber":"A1001003","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"病假","AttendanceType2":"出勤"},
+		{"cardNumber":"A1001004","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"产假","AttendanceType2":"出勤"},
+		{"cardNumber":"A1001005","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"婚假","AttendanceType2":"出勤"},
+		{"cardNumber":"A1001006","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"丧假","AttendanceType2":"出勤"},
+		{"cardNumber":"A1001007","employeeName":"张三","fillInTime":"2019-7-28","AttendanceType1":"出勤","AttendanceType2":"出勤"}
+]

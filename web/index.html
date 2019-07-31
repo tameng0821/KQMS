@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>用户登录</title>
+    <link href="css/login.css" rel="stylesheet" type="text/css" />
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.validate.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/messages_zh.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        // 页面加载
+        $(function(){
+            // 编写校验
+            $("#loginForm").validate({
+                // 表单提交句柄,为一回调函数，带一个参数：form
+                submitHandler: function(form){
+                    // 提交表单
+                    form.submit();
+                },
+                rules:{
+                    username:{
+                        required:true
+                    },
+                    password:{
+                        required:true,
+                        rangelength:[3,10]
+                    }
+                },
+                messages:{
+                    username:{
+                        required:"不能为空"
+                    },
+                    password:{
+                        required: "不能为空",
+                        rangelength: "密码长度3到10位"
+                    }
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+<form action="/userLoginServlet" method="post" id="loginForm">
+
+    <div id="login">
+        <div id="top">
+            <div id="top_left"><img src="img/login_03.gif"/></div>
+            <div id="top_center"></div>
+        </div>
+
+        <div id="center">
+            <div id="center_left"></div>
+            <div id="center_middle">
+
+                <div style="height: 16px;text-align: center">
+                    <font color="red"></font>
+                </div>
+
+                <div id="user">用 户
+                    <input type="text" name="username" />
+                </div>
+                <div id="password">密   码
+                    <input type="password" name="password" />
+                </div>
+                <div id="btn">
+                    <input type="submit" value="登录" />
+                </div>
+            </div>
+            <div id="center_right"></div>
+        </div>
+        <div id="down">
+            <div id="down_left">
+                <div id="inf">
+                    <span class="inf_text">版本信息</span>
+                    <span class="copyright">考勤管理系统 v1.0</span>
+                </div>
+            </div>
+            <div id="down_center"></div>
+        </div>
+
+    </div>
+</form>
+</body>
+</html>

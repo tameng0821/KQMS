@@ -1,0 +1,10 @@
+[
+		
+		{"employeeID":"1001","cardNumber":"A100101","employeeName":"AEE","departmentName":"财务部","attendanceDate":"2015-02-05","attendanceFlag":"上午","attendanceTypeID":1},
+		{"employeeID":"1002","cardNumber":"A100102","employeeName":"BEE","departmentName":"人事部","attendanceDate":"2015-02-05","attendanceFlag":"上午","attendanceTypeID":3},
+		{"employeeID":"1003","cardNumber":"A100103","employeeName":"CEE","departmentName":"宣传部","attendanceDate":"2015-02-05","attendanceFlag":"上午","attendanceTypeID":5},
+		{"employeeID":"1004","cardNumber":"A100104","employeeName":"DEE","departmentName":"财务部","attendanceDate":"2015-02-05","attendanceFlag":"上午","attendanceTypeID":2},
+		{"employeeID":"1005","cardNumber":"A100105","employeeName":"EEE","departmentName":"人事部","attendanceDate":"2015-02-05","attendanceFlag":"上午","attendanceTypeID":4},
+		{"employeeID":"1006","cardNumber":"A100106","employeeName":"FEE","departmentName":"财务部","attendanceDate":"2015-02-05","attendanceFlag":"上午","attendanceTypeID":6}
+	
+]
