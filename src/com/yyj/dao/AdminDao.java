@@ -11,5 +11,5 @@ package com.yyj.dao;
  *@Date 2019/7/23 17:23
  *@Version 1.0
  **/
-public interface AdminDao {
+public  class AdminDao extends BaseDao {
 }

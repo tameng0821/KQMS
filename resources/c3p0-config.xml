@@ -3,7 +3,7 @@
     <default-config>
         <property name="driverClass">com.mysql.jdbc.Driver</property>
         <property name="jdbcUrl">
-            <![CDATA[jdbc:mysql://localhost:3306/kqms?useUnicode=true&serverTimezone=UTC&characterEncoding=UTF-8]]>
+            <![CDATA[jdbc:mysql://localhost:3306/kqms?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8]]>
         </property>
         <property name="user">root</property>
         <property name="password">123456</property>

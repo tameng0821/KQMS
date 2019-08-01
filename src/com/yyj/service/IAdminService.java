@@ -5,11 +5,12 @@ package com.yyj.service;
  */
 
 /**
- *@ClassName AdminService
+ *@ClassName IAdminService
  *@Description TODO
  *@Author Yanjiang
  *@Date 2019/7/23 17:23
  *@Version 1.0
  **/
-public class AdminService {
+public interface IAdminService {
+
 }

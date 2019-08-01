@@ -29,7 +29,6 @@ public class EmployeeServiceImpl implements IEmployeetService {
 
     @Override
     public List<Employee> selectAllByPage(String empname,int departmentid) {
-        System.out.println(empname+departmentid);
         Object[] params = {};
         String sql = "select e.employeeID,e.employeeName,e.employeeGender,e.positionID,e.departmentID,e.cardNumber,e.employeeState,e.employeeMemo,p.positionName,d.departmentName FROM employee e left join position p ON e.positionID=p.positionID left JOIN department d on e.departmentID=d.departmentId where 0=0";
         StringBuilder sbl = new StringBuilder(sql);
@@ -43,7 +42,6 @@ public class EmployeeServiceImpl implements IEmployeetService {
             params = Arrays.copyOf(params, params.length + 1);
             params[ params.length-1 ] = departmentid;
         }
-        System.out.println(sbl.toString());
         return employeeDao.query(sbl.toString(),Employee.class,params);
     }
 

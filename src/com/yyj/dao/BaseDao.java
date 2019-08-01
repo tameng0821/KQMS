@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.yyj.utils.JDBCUtils;
+import com.yyj.utils.JDBCUtil;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -18,14 +18,14 @@ public class BaseDao<T> {
 		T obj = null;
 		Connection conn = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			QueryRunner qRunner = new QueryRunner();
 			obj = qRunner.query(conn, sql, new BeanHandler<T>(clazz), params);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally
 		{
-			JDBCUtils.closeConnection();
+			JDBCUtil.closeConnection();
 		}
 		return obj;
 	}
@@ -41,7 +41,7 @@ public class BaseDao<T> {
 		List beans = null;
 		Connection conn = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 //			System.out.println(conn+"----------------");
 			QueryRunner qRunner = new QueryRunner();
 			beans = (List) qRunner.query(conn,
@@ -51,17 +51,17 @@ public class BaseDao<T> {
 			e.printStackTrace();
 		}finally
 		{
-			JDBCUtils.closeConnection();
+			JDBCUtil.closeConnection();
 		}
 		return beans;
 	}
 
 
-	public boolean update(String sql, Object[] params) {
+	public boolean update(String sql, Object...params) {
 		Connection conn = null;
 		boolean flag = false;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			QueryRunner qRunner = new QueryRunner();
 			int i = qRunner.update(conn, sql, params);
 			if (i > 0) {
@@ -71,7 +71,7 @@ public class BaseDao<T> {
 			e.printStackTrace();
 		}finally
 		{
-			JDBCUtils.closeConnection();
+			JDBCUtil.closeConnection();
 		}
 		return flag;
 	}
@@ -103,14 +103,14 @@ public class BaseDao<T> {
 		long count =0L;
 		Connection conn = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			QueryRunner qRunner = new QueryRunner();
 			count  = (Long) qRunner.query(conn, sql, new ScalarHandler(), params);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally
 		{
-			JDBCUtils.closeConnection();
+			JDBCUtil.closeConnection();
 		}
 		return count;
 	}
@@ -119,7 +119,7 @@ public class BaseDao<T> {
     	Connection conn = null;
 		Long key = 0l;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			QueryRunner qRunner = new QueryRunner();
 			key =(long)qRunner.insert(conn,sql, new ScalarHandler(1), params);
 			 
@@ -127,7 +127,7 @@ public class BaseDao<T> {
 			e.printStackTrace();
 		}finally
 		{
-			JDBCUtils.closeConnection();
+			JDBCUtil.closeConnection();
 		}
 		return key;
     }

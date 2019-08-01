@@ -26,13 +26,13 @@ public class Note {
     private int employeeId;
     private int noteTypeId;
     private String cause;
-    private String fillInTime;
+    private Date fillInTime;
     private String directorSign;
     private String administrationSign;
     private String presidentSign;
-    private String startDate;
+    private Date startDate;
     private String startTime;
-    private String endDate;
+    private Date endDate;
     private String endTime;
     private int adminId;
     private int operatorId;
@@ -44,8 +44,8 @@ public class Note {
     private Date attendanceDate;
     private String cardNumber;
 
-    public Note(int noteId, int employeeId, int noteTypeId, String cause, String fillInTime, String directorSign,
-                String administrationSign, String presidentSign, String startDate, String startTime, String endDate,
+    public Note(int noteId, int employeeId, int noteTypeId, String cause, Date fillInTime, String directorSign,
+                String administrationSign, String presidentSign, Date startDate, String startTime, Date endDate,
                 String endTime, int adminId, int operatorId, String isVerify) {
         super();
         this.noteId = noteId;

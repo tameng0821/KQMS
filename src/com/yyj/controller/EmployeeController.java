@@ -45,7 +45,6 @@ public class EmployeeController extends HttpServlet{
             }
             List<Employee> employees = employeetService.selectAllByPage(s, i);
             String s2 = JSON.toJSONString(employees);
-            System.out.println(s2);
             writer.print(s2);
 
         }else if("queryone".equals(option)){

@@ -74,9 +74,6 @@ public class NoteServiceImpl  implements INoteService {
 		}
 		
 		sbl.append(" limit " + util.getStartIndex() + " , " + util.getPageSize());
-		
-		System.out.println(sbl.toString());
-		
 		return dao.query(sbl.toString(), Note.class, params);
 	}
 	
@@ -92,9 +89,6 @@ public class NoteServiceImpl  implements INoteService {
 		PageUtil util = new PageUtil(1, 5);		
 		List<Note> list = 
 				new NoteServiceImpl().queryByKeyWords(note, util);
-		for (Note note2 : list) {
-			System.out.println( note2.toString() );
-		}
 	}
 
 	@Override
@@ -172,7 +166,25 @@ public class NoteServiceImpl  implements INoteService {
 
 	@Override
 	public boolean insert(Note note) {
-		return false;
+		String sql = " insert into Note ( EmployeeID , "
+				+ "NoteTypeID , Cause , FillInTime "
+				+ " , DirectorSign , adminstrationSign, "
+				+ " PresidentSign , StartDate , "
+				+ " StartTime , EndDate , EndTime , "
+				+ " AdminID ,  OperatorID , IsVerify ) "
+				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,? )  ";
+
+		return dao.update(sql,
+				note.getEmployeeId() ,
+				note.getNoteTypeId() ,
+				note.getCause() ,
+				note.getFillInTime(),
+				note.getDirectorSign(),
+				note.getAdministrationSign(),
+				note.getPresidentSign(),note.getStartDate(),
+				note.getStartTime(),note.getEndDate(),
+				note.getEndTime(),note.getAdminId(),
+				note.getOperatorId(),note.getIsVerify());
 	}
 
 	@Override
