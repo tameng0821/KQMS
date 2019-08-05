@@ -28,7 +28,7 @@ public class Note {
     private String cause;
     private Date fillInTime;
     private String directorSign;
-    private String administrationSign;
+    private String adminstrationSign;
     private String presidentSign;
     private Date startDate;
     private String startTime;
@@ -41,6 +41,7 @@ public class Note {
     private String employeeName ;
     private String typeName;
     private String operatorName;
+    private String operatorCardNumber;
     private Date attendanceDate;
     private String cardNumber;
 
@@ -54,7 +55,7 @@ public class Note {
         this.cause = cause;
         this.fillInTime = fillInTime;
         this.directorSign = directorSign;
-        this.administrationSign = administrationSign;
+        this.adminstrationSign = administrationSign;
         this.presidentSign = presidentSign;
         this.startDate = startDate;
         this.startTime = startTime;

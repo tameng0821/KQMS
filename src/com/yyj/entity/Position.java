@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Position {
 
-    Integer positionID;
-    String positionName;
+    private Integer positionID;
+    private String positionName;
 }

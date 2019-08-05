@@ -1,108 +1,232 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Insert title here</title>
-		<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css" />
-		<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css" />
+<head>
+	<title>T03.html</title>
+	<meta name="keywords" content="keyword1,keyword2,keyword3">
+	<meta name="description" content="this is my page">
+	<meta name="content-type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/default/easyui.css"/>
+	<link type="text/css" rel="stylesheet" href="js/jquery-easyui/themes/icon.css"/>
+	<script src="js/jquery-easyui/jquery.min.js"></script>
+	<script src="js/jquery-easyui/jquery.easyui.min.js"></script>
+	<script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript">
+        $(
+            function()
+            {
+                //初始化考勤列表
+                initAttendanceList();
 
-		<script src="js/jquery-easyui/jquery.min.js"></script>
-		<script src="js/jquery-easyui/jquery.easyui.min.js"></script>
-		<script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
-		<script>
-			$(function() {
-					  
-				initAttendanceList();
-				getSelect();
-			});
-			 function initAttendanceList(){
-				
-				$("#tblAttendanceList").datagrid({
-					url:'json/attendance.json', 
-					rownumbers:true,
-					singleSelect:true,
-					toolbar:'#tblAttendance',
-					columns:[[    
-						{field:'employeeID',title:'员工编号',width:'12.5%',align:'center'},
-						{field:'cardNumber',title:'员工卡号',width:'12.5%',align:'center'},
-						{field:'employeeName',title:'员工姓名',width:'12.5%',align:'center'},
-						{field:'departmentName',title:'部门名称',width:'12.5%',align:'center'},
-						{field:'attendanceDate',title:'考勤日期',width:'12.5%',align:'center'},
-						{field:'attendanceFlag',title:'考勤时间',width:'12.5%',align:'center'},
-						{field:'attendanceType',title:'考勤状态',width:'12.5%',align:'center',
-							formatter:function(value,row,index){
-								//改成下拉列表
-								var str='<select onchange="select_onclick ( this,'+row.employeeID+', \''+row.attendanceDate+'\' )" >';					
-								return str+getSelect();					
-							}
-						},
-						{field:'opt1',title:'单据',width:'12.5%',align:'center'}
-					]]
-				});
-			}
-			 function getSelect() {
-				 var str="";
-				 $.ajax({
-					  	async:false,
-						url:"AttendanceTypeServlet?action=queryAll",
-						type:"POST",
-						success:function(data){
-							var jsonObj=JSON.parse(data);
-							for(var i=0;i<jsonObj.length;i++){
-								var typeID=jsonObj[i].typeID;
-								var typeName=jsonObj[i].typeName;
-								var typeCategory=jsonObj[i].typeCategory
-								str+="<option value=\'"+typeID+"\' typeCategory='"+typeCategory+"' >"+typeName+"</option>"
-							}
-							str+="</select>";
-							
-							//jsonObj[1].typeName.val();
-						}
-				});
-				 return str;
-			}
-			 function select_onclick(obj,employeeID,attendanceDate){
-			
-				var typeID =$(obj).find("option:selected").val();
-				var typeCategory=$(obj).find("option:selected").attr("typeCategory");
-				var typeName =$(obj).find("option:selected").text();
-				 //两个值 查询请假表，返回表单。
-				if("1"==typeCategory){
-					$(obj).parent().parent().next().find("div").html("回带编号");
-				}else if("0"==typeCategory){
-					$(obj).parent().parent().next().find("div").html("");
-				}
-			} 
-		</script>
-	</head>
-	<body>
-		<div class="easyui-layout" data-options="fit:true" id="useBox">
+                //得到考勤状态数据
+                initAttendanceTypeData();
 
-			 <form id="queryForm" method="post">
-				 <div style="margin-top: 20px">
-					 <label for="departmentID">部门名称:</label>
-					 <!--这里需要一个url-->
-					 <input id="departmentID" class="easyui-combobox" name="departmentID"
-							data-options="valueField:'departmentID',textField:'departmentName',url:'DepartmentServlet?action=queryAll'" />
-					 <label for="attendanceDate">考勤日期:</label>
-					 <input id="attendanceDate" class="easyui-datebox" name="attendanceDate" />
-					 <label for="attendanceFlag">考勤时间段:</label>
-					 <select id="attendanceFlag" class="easyui-combobox" name="attendanceFlag" style="width:80px;"  data-options="panelHeight:45,required:true">
-						 <option value="上午">上午</option>
-						 <option value="下午">下午</option>
-					 </select>
-					 <a id="btnQuery" class="easyui-linkbutton" iconCls="icon-search" >查看</a>
-				 </div>
-				
-			</form> 
-			<div class="tableCon" style="margin-top:20px">
-				<table id="tblAttendanceList"></table>
-				<div id="tblAttendance">
-					<a id="btnSava" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">保存</a>
-				</div>
-	
-			</div>  
-			
+                $("#queryForm #btnQuery").click(
+                    function()
+                    {
+                        $('#tblAttendanceList').datagrid('load',{
+                            departmentId: $("#queryForm #departmentId").combobox("getValue"),
+                            attendanceDate:$("#queryForm #attendanceDate").datebox("getValue"),
+                            attendanceFlag:$("#queryForm #attendanceFlag").val()
+                        });
+                    }
+                );
+
+                $("#btnSave").click(
+                    function()
+                    {
+                        var employeeIds = "id=" + new Date().getTime();
+                        var cardNumbers = "";
+                        var attendanceTypeIds = "";
+                        var noteIds = "";
+
+                        var rows = $("#tblAttendanceList").datagrid("getData").rows;
+                        for( var  i = 0 ; i < rows.length ; i++ )
+                        {
+                            var row = rows[i];
+							if(typeof (row.attendanceTypeId)=='undefined'){
+                                row.attendanceTypeId=1;
+							}
+                            employeeIds = employeeIds + "&employeeId=" + row.employeeID;
+                            cardNumbers = cardNumbers + "&cardNumber=" + row.cardNumber;
+                            attendanceTypeIds = attendanceTypeIds + "&attendanceTypeId=" + row.attendanceTypeId;
+                            noteIds = noteIds + "&noteId=" + row.noteId;
+                        }
+
+                        var params = employeeIds + cardNumbers +
+                            attendanceTypeIds + noteIds ;
+
+                        params += "&QdepartmentId="
+                            + $("#queryForm #departmentId").combobox("getValue")
+                            + "&QattendanceDate=" + $("#queryForm #attendanceDate").datebox("getValue")
+                            + "&QattendanceFlag=" + $("#queryForm #attendanceFlag").val();
+                        //进行批量提交
+                        $.ajax(
+                            {
+                                type:"post",
+                                url:"AttendanceRecordController/batchUpdate",
+                                data:params,
+                                success:function( data )
+                                {
+                                    if( data == "true" )
+                                    {
+                                        alert("批量录入成功！");
+                                    }else
+                                    {
+                                        alert("批量录入失败！");
+                                    }
+                                }
+                            }
+                        );
+                    }
+                );
+            }
+        );
+
+        var attendanceTypeData;
+        function initAttendanceTypeData(){
+            $.ajax({
+				url:'AttendanceRecordController/queryType',
+				method:'post',
+				dataType:'json',
+				success:function (data) {
+                    attendanceTypeData=data;
+                }
+			})
+            // attendanceTypeData = [
+            //     { "typeId":1, "typeName":"出勤","typeCategory":0 },
+            //     { "typeId":2, "typeName":"迟到","typeCategory":0 },
+            //     { "typeId":3, "typeName":"旷工","typeCategory":0},
+            //     { "typeId":4, "typeName":"事假","typeCategory":1},
+            //     { "typeId":5, "typeName":"病假","typeCategory":1},
+            //     { "typeId":6, "typeName":"婚假","typeCategory":1},
+            //     { "typeId":7, "typeName":"丧假" ,"typeCategory":1},
+            //     { "typeId":8, "typeName":"产假","typeCategory":1}
+            // ];
+        }
+
+        function select_onclick( obj , i) {
+
+            var row = $('#tblAttendanceList').datagrid("getData").rows[i];
+            // obj.selectedIndex 代表下拉框的第几个列表项被选中
+            if(attendanceTypeData[obj.selectedIndex].typeCategory == 0)
+            {
+                //清除 单据编号
+                $('#tblAttendanceList').datagrid('updateRow',{
+                    index: i,
+                    row: {
+                        noteId: "",
+                        attendanceTypeId:obj.value
+
+                    }
+                });
+                return ;
+            }
+
+            var employeeId = row.employeeID;
+            var attendanceDate = row.attendanceDate;
+            var attendanceFlag = row.attendanceFlag;
+            //根据这个三个条件进行单据查询
+            //假定我们查询到的单据编号是 1001
+            //我们要将1001，会带到单据编号列
+            $.ajax({
+                type:"post",
+                url:"AttendanceRecordController/getNoteId",
+                data: {employeeId:employeeId,attendanceDate:attendanceDate,attendanceFlag:attendanceFlag},
+                success:function(data)
+                {
+                    $('#tblAttendanceList').datagrid('updateRow',{
+                        index: i,
+                        row: {
+                            noteId: data==0?'无请假单':data,
+                            attendanceTypeId:obj.value
+                        }
+                    });
+                }
+            });
+        }
+
+        function initAttendanceList()
+        {
+            $('#tblAttendanceList').datagrid({
+                url:'AttendanceRecordController/queryByWords',
+                queryParams:{
+                    departmentId:"0",
+                    attendanceDate:"2018-08-01",
+                    attendanceFlag:"上午"
+                },
+                toolbar:'#barAttendanceList',
+                rownumbers:true,
+                singleSelect:true,
+                columns:[[
+					{field:'employeeID',title:'考勤状态',width:'14.28%' ,align:'center',hidden:true},
+                    {field:'attendanceTypeId',title:'考勤状态',width:'14.28%' ,align:'center',hidden:true},
+                    {field:'employeeName',title:'员工姓名',width:'14.28%' ,align:'center'},
+                    {field:'cardNumber',title:'卡号',width:'14.28%' ,align:'center'},
+                    {field:'departmentName',title:'部门名称',width:'14.28%' ,align:'center'},
+                    {field:'attendanceDate',title:'考勤日期',width:'14.28%' ,align:'center'},
+                    {field:'attendanceFlag',title:'考勤时间段',width:'14.28%' ,align:'center'},
+                    {field:'attendanceType',title:'考勤状态',width:'14.28%' ,align:'center',
+                        formatter:function( value , row , index ){
+                            //返回下拉框
+                            var html = "<select onchange='select_onclick(this," + index + ")'>";
+
+                            for( var i = 0 ; i < attendanceTypeData.length ; i++ )
+                            {
+                                var type_row = attendanceTypeData[i];
+
+                                if( row.attendanceTypeId == type_row.typeId )
+                                    html += "<option selected='true' value='"
+                                        + type_row.typeId + "'>"
+                                        + type_row.typeName + "</option>";
+                                else
+                                    html += "<option value='"
+                                        + type_row.typeId + "'>"
+                                        + type_row.typeName + "</option>";
+                            }
+
+                            html += "</select>";
+                            return html;
+                        }
+                    },
+                    {field:'noteId',title:'单据编号',width:'14.28%' ,align:'center'}
+                ]]
+            });
+        }
+	</script>
+</head>
+
+<body>
+<br/>
+<div class="easyui-layout" style="text-align: center;" data-options="fit:true" id="useBox">
+	<form id="queryForm" method="post">
+		<label for="departmentId">部门:</label>
+		<input id="departmentId" class="easyui-combobox"
+			   name="departmentId"
+			   data-options="valueField:'departmentId',textField:'departmentName',url:'DepartmentController/query'" />
+		<label for="departmentId">考勤日期:</label>
+		<input id="attendanceDate" type="text"
+			   name="attendanceDate"
+			   class="easyui-datebox"></input>
+		<label for="attendanceFlag">考勤时间段:</label>
+		<select id="attendanceFlag"
+				class="easyui-combobox"
+				name="attendanceFlag"
+				style="width:200px;">
+			<option value="上午">上午</option>
+			<option value="下午">下午</option>
+		</select>
+		<a id="btnQuery" class="easyui-linkbutton"
+		   data-options="iconCls:'icon-search',plain:true">查询</a>
+	</form>
+
+	<!-- 考勤的列表 -->
+	<div class="tableCon">
+		<table id="tblAttendanceList" ></table>
+		<div id="barAttendanceList">
+			<a id="btnSave" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true">批量保存</a>
 		</div>
-	</body>
+	</div>
+</div>
+
+</body>
 </html>

@@ -20,9 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AdminpPopedom {
 
-    Integer popedomID;
-    Integer departmentID;
-    Integer adminID;
-    Admin admin;
-    Department department;
+    private Integer popedomID;
+    private Integer departmentID;
+    private  Integer adminID;
 }

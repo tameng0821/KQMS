@@ -72,19 +72,20 @@ public class NoteController extends HttpServlet {
 			List<Note> list = service.queryByKeyWords(note, util);
 			int count = service.getTotal(note);
 			
-			HashMap<String, Object> map = 
-					new HashMap<String, Object>();
+			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("total", count);
 			map.put("rows", list);
 			
 			String jsonString = JSON.toJSONString(map);
 			out.print(jsonString);
 		}else if("queryByCatecory".equals(opt)) {
+
 			List<AttendanceType> list = service.queryByCatecory(1);
 			list.add(0, new AttendanceType(0 , "全部" , "1"));
 			String jsonString = JSON.toJSONString(list);
 			out.print(jsonString);
 		}else if("add".equals(opt)){
+
 			String employeeId = request.getParameter("employeeId1");
 			String operatorId = request.getParameter("operatorId1");
 			String noteTypeId = request.getParameter("noteType");
@@ -98,9 +99,8 @@ public class NoteController extends HttpServlet {
 			String administrationSign = request.getParameter("administrationSign");
 			String presidentSign = request.getParameter("presidentSign");
 			String isVerify = request.getParameter("isVerify");
-			System.out.println(employeeId);
-			System.out.println(employeeId.trim());
-			System.out.println(Integer.valueOf(employeeId));
+
+
 			Note note = new Note();
 			note.setEmployeeId(Integer.parseInt(employeeId));
 			note.setNoteTypeId(Integer.parseInt(noteTypeId));
@@ -119,7 +119,7 @@ public class NoteController extends HttpServlet {
 			note.setStartTime(startTime);
 			note.setEndTime(endTime);
 			note.setDirectorSign(directorSign);
-			note.setAdministrationSign(administrationSign);
+			note.setAdminstrationSign(administrationSign);
 			note.setPresidentSign(presidentSign);
 			note.setIsVerify(isVerify);
 			//应该是从Session里面获取
@@ -134,6 +134,14 @@ public class NoteController extends HttpServlet {
 			map.put("status", bln);
 			String jsonString = JSON.toJSONString(map);
 			out.print(jsonString);
+			out.flush();
+			out.close();
+		}else if("queryone".equals(opt)){
+			int noteID = Integer.parseInt(request.getParameter("noteID"));
+			Note queryone = service.queryone(noteID);
+			String s = JSON.toJSONString(queryone);
+			System.out.println(s);
+			out.print(s);
 			out.flush();
 			out.close();
 		}

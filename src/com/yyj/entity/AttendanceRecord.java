@@ -22,16 +22,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class AttendanceRecord {
 
-    Integer attendanceID;
-    Integer employeeID;
-    String cardNnmber;
-    Date attendanceDate;
-    String attendanceFlag;
-    Integer attendanceTypeID;
-    Integer adminID;
-    Integer noteID;
-    Employee employee;
-    AttendanceType attendanceType;
-    Admin admin;
-    Note note;
+    private Integer attendanceID;
+    private Integer employeeID;
+    private String cardNumber;
+    private String attendanceDate;
+    private String attendanceFlag;
+    private Integer attendanceTypeID;
+    private Integer adminID;
+    private Integer noteID;
+
+    //新增需要的属性
+    private String employeeName;
+    private String departmentName;
+    private Integer departmentId;
 }

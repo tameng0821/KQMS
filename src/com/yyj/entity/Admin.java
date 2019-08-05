@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Admin {
 
-     Integer adminID;
-     String adminAccount;
-     String adminPwd;
-     String adminState;
-     String adminRight;
-     String adminName;
+     private Integer adminID;
+     private  String adminAccount;
+     private  String adminPwd;
+     private  String adminState;
+     private  String adminRight;
+     private  String adminName;
 
 
 

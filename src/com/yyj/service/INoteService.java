@@ -21,7 +21,7 @@ public interface INoteService {
 
 	public boolean insert(Note note);
 	
-	public Note queryByPK(int noteId);
+	public Note queryone(int noteId);
 	
 	public boolean delete(int noteId);
 }

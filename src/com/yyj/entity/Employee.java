@@ -22,14 +22,14 @@ import java.net.DatagramPacket;
 @NoArgsConstructor
 public class Employee {
 
-    Integer employeeID;
-    String employeeName;
-    String employeeGender;
-    Integer positionID;
-    Integer departmentID;
-    String cardNumber;
-    String employeeState;
-    String employeeMemo;
+    private Integer employeeID;
+    private String employeeName;
+    private String employeeGender;
+    private Integer positionID;
+    private Integer departmentID;
+    private String cardNumber;
+    private String employeeState;
+    private String employeeMemo;
 
     public Employee(Integer employeeID, String employeeName, String employeeGender, Integer positionID, Integer departmentID, String cardNumber, String employeeState, String employeeMemo) {
         this.employeeID = employeeID;

@@ -76,20 +76,7 @@ public class NoteServiceImpl  implements INoteService {
 		sbl.append(" limit " + util.getStartIndex() + " , " + util.getPageSize());
 		return dao.query(sbl.toString(), Note.class, params);
 	}
-	
-	public static void main(String[] args) {
-		
-		Note note = new Note();
-		note.setIsVerify("");
-		note.setNoteTypeId(0);
-		note.setEmployeeName("��");
-		note.setOperatorName("��");		
-		note.setAttendanceDate( new Date(  new  Date().getTime() + 24*60*60*1000 )  );
-		
-		PageUtil util = new PageUtil(1, 5);		
-		List<Note> list = 
-				new NoteServiceImpl().queryByKeyWords(note, util);
-	}
+
 
 	@Override
 	public int getTotal(Note note) {
@@ -172,7 +159,7 @@ public class NoteServiceImpl  implements INoteService {
 				+ " PresidentSign , StartDate , "
 				+ " StartTime , EndDate , EndTime , "
 				+ " AdminID ,  OperatorID , IsVerify ) "
-				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,? )  ";
+				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
 
 		return dao.update(sql,
 				note.getEmployeeId() ,
@@ -180,7 +167,7 @@ public class NoteServiceImpl  implements INoteService {
 				note.getCause() ,
 				note.getFillInTime(),
 				note.getDirectorSign(),
-				note.getAdministrationSign(),
+				note.getAdminstrationSign(),
 				note.getPresidentSign(),note.getStartDate(),
 				note.getStartTime(),note.getEndDate(),
 				note.getEndTime(),note.getAdminId(),
@@ -188,8 +175,24 @@ public class NoteServiceImpl  implements INoteService {
 	}
 
 	@Override
-	public Note queryByPK(int noteId) {
-		return null;
+	public Note queryone(int noteId) {
+		String sql = "select "
+				+ " note.EmployeeID  , "
+				+ " e1.EmployeeName , e1.CardNumber , "
+				+ " note.OperatorID ,note.cause,e2.EmployeeName OperatorName , "
+				+ " e2.CardNumber  OperatorCardNumber ,  "
+				+ " note.NoteTypeID , note.FillInTime , "
+				+ " note.StartDate , note.StartTime, "
+				+ " note.EndDate , note.EndTime , "
+				+ " note.DirectorSign , note.AdminstrationSign,"
+				+ " note.PresidentSign , note.IsVerify "
+				+ " from note  inner join employee e1 "
+				+ " on note.EmployeeID = e1.EmployeeID  "
+				+ " inner join employee e2  "
+				+ " on note.EmployeeID = e2.EmployeeID "
+				+ " where noteId = ? ";
+
+		return (Note) dao.get(sql, Note.class, new Object[]{noteId});
 	}
 
 	@Override

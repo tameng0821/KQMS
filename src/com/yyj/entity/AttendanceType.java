@@ -1,7 +1,7 @@
 package com.yyj.entity;
 
 public class AttendanceType {
-	private int typeId;
+	private Integer typeId;
 	private String typeName;
 	private String typeCategory;
 	public AttendanceType() {
