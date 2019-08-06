@@ -56,19 +56,37 @@
 </div>
 <div id="myMes">
 
-<p><label class="diaLable">用户名：</label><input  class="easyui-validatebox TailInput" disabled="disabled" data-options="required:true,novalidate:true" value="张林海"></p>
-   <p><label class="diaLable">登录名称：</label><input  class="easyui-validatebox TailInput" data-options="required:true" value="zhanglinghai"></p>
-    <p><label class="diaLable">用户密码：</label><input  type="password" value="123456" class="easyui-validatebox TailInput" data-options="required:true,"></p>
-    <p><label class="diaLable">用户角色：</label><input  class="easyui-validatebox TailInput" disabled="disabled" data-options="required:true,novalidate:true" value="管理员"></p>
-    <p><label class="diaLable">所属部门：</label><input  class="easyui-validatebox TailInput" disabled="disabled" data-options="required:true,novalidate:true" value="行政部门"></p>
-    <p><label class="diaLable areaLabel">描述：</label><textarea class="TailArea01" ></textarea></p>
+<p><label class="diaLable">用户ID：</label><input id="userId" class="easyui-validatebox TailInput" disabled="disabled" data-options="required:true,novalidate:true" ></p>
+   <p><label class="diaLable">登录名称：</label><input id="userName" class="easyui-validatebox TailInput" data-options="required:true" ></p>
+    <p><label class="diaLable">用户密码：</label><input id="password" type="password"  class="easyui-validatebox TailInput" data-options="required:true,"></p>
+    <p><label class="diaLable">用户角色：</label><input id="role" class="easyui-validatebox TailInput" disabled="disabled" data-options="required:true,novalidate:true" ></p>
+    <p><label class="diaLable">状态：</label><input id="stateMent" class="easyui-validatebox TailInput" disabled="disabled"  data-options="required:true,novalidate:true" ></p>
     <div class="forSubmint"> <a href="#" class="easyui-linkbutton"  iconCls="icon-save" >保存</a><a href="#" class="easyui-linkbutton"  iconCls="icon-redo" >重置</a> </div>
 </div>
-
 <script src="js/jquery-easyui/jquery.min.js"></script>
 <script src="js/jquery-easyui/jquery.easyui.min.js"></script>
 <script src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
 <script src="js/main.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url:'userLoginController',
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                $("#userId").prop('value',data.adminID);
+                $("#userName").prop('value',data.adminName);
+                $("#password").prop('value',data.adminPwd);
+                data.adminRight==1?$("#role").prop('value','管理员'):$("#role").prop('value','普通用户')
+                data.adminState==1?$("#stateMent").prop('value','正常'):$("#stateMent").prop('value','禁用')
+            }
+        })
+
+    })
+
+
+</script>
+
 
 </body>
 </html>

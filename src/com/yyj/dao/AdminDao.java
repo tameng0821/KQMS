@@ -12,4 +12,5 @@ package com.yyj.dao;
  *@Version 1.0
  **/
 public  class AdminDao extends BaseDao {
+
 }

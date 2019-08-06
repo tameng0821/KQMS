@@ -21,8 +21,11 @@ import java.sql.SQLException;
 public class DBConnection {
     @Test
     public void getConnect() throws SQLException {
-        QueryRunner runner=new QueryRunner(new ComboPooledDataSource());
-        String query = (String) runner.query("select * from attendancetype", new ScalarHandler(2));
-        System.out.println(query);
+//        QueryRunner runner=new QueryRunner(new ComboPooledDataSource());
+//        String query = (String) runner.query("select * from attendancetype", new ScalarHandler(2));
+//        System.out.println(query);
+//        String a="aaa";
+//        String b="aaa";
+//        System.out.println(a.equals(b));
     }
 }

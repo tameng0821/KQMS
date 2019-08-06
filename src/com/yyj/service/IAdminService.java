@@ -4,6 +4,8 @@ package com.yyj.service;
  * @create 2019-07-23 17:23
  */
 
+import com.yyj.entity.Admin;
+
 /**
  *@ClassName IAdminService
  *@Description TODO
@@ -12,5 +14,5 @@ package com.yyj.service;
  *@Version 1.0
  **/
 public interface IAdminService {
-
+    public Admin login(String username,String password);
 }

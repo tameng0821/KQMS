@@ -36,9 +36,8 @@ function openMes() {
 }
 function saveExit() {
         $.messager.confirm('退出确认','你是否退出系统？',function () {
-
+            window.location.href = 'index.html';
         })
-
 }
 function saveCanle() {
         $.messager.confirm('注销确认','你是否注销用户？',function () {
